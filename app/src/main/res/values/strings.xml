@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">相约同城</string>
+    <string name="registration_success">注册成功！</string>
+    <string name="registration_failed">注册失败，请稍后重试。</string>
+    <string name="welcome_title">欢迎</string>
+    <string name="welcome_message">感谢使用我们的应用！请确认权限以继续。</string>
+    <string name="close_button_description">close</string>
+</resources>
