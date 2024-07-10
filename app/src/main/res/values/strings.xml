@@ -5,4 +5,6 @@
     <string name="welcome_title">欢迎</string>
     <string name="welcome_message">感谢使用我们的应用！请确认权限以继续。</string>
     <string name="close_button_description">close</string>
+    <string name="server_ip">192.168.137.1</string>
+    <string name="server_port">3000</string>
 </resources>
