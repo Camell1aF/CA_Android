@@ -1,14 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 按钮被按下时的背景颜色 -->
     <item android:state_pressed="true">
-        <shape>
-            <solid android:color="#FF69B4"/>
-            <corners android:radius="12dp"/>
+        <shape android:shape="rectangle">
+            <solid android:color="#FF4081"/> <!-- 按下时的颜色 -->
+            <corners android:radius="8dp"/>
         </shape>
     </item>
+    <!-- 按钮默认状态的背景颜色 -->
     <item>
-        <shape>
-            <solid android:color="#FF1493"/>
-            <corners android:radius="12dp"/>
+        <shape android:shape="rectangle">
+            <solid android:color="#FF80AB"/> <!-- 默认颜色 -->
+            <corners android:radius="8dp"/>
         </shape>
     </item>
 </selector>

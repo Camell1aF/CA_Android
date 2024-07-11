@@ -1,18 +1,36 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.CA_test" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="android:buttonStyle">@style/CustomButtonStyle</item>
+    <style name="Base.Theme.CA_test" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- 覆盖默认颜色 -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@color/onPrimaryColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
+        <item name="colorOnSecondary">@color/onSecondaryColor</item>
+        <item name="colorSurface">@color/surfaceColor</item>
+        <item name="colorOnSurface">@color/onSurfaceColor</item>
+        <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="colorOnBackground">@color/onBackgroundColor</item>
+
+        <!-- 设置状态栏和导航栏颜色为透明 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="Theme.CA_test" parent="Base.Theme.CA_test" />
+    <style name="Theme.CA_test" parent="Base.Theme.CA_test">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
     <!-- Custom Button Style -->
     <style name="CustomButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="android:background">@drawable/custom_button</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
         <item name="android:padding">0dp</item>
     </style>
 </resources>
