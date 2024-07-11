@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#FFFFFF"/>
+    <solid android:color="#99FFFFFF"/> <!-- 50% 透明度的白色背景 -->
     <corners android:radius="16dp"/>
     <shadow android:shadowColor="#B3B3B3" android:shadowDx="4" android:shadowDy="4" android:shadowRadius="10"/>
     <padding android:left="16dp" android:top="16dp" android:right="16dp" android:bottom="16dp"/>

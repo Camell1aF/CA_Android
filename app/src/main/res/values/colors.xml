@@ -4,14 +4,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="statusBarColor">#9FFFDEB8</color>
     <color name="navigationBarColor">#FFDEB8</color>
-    <color name="primaryColor">#FF80AB</color>
-    <color name="primaryDarkColor">#FF4081</color>
+    <color name="primaryColor">#ff797d</color>
+    <color name="primaryDarkColor">#ff797d</color>
     <color name="onPrimaryColor">#FFFFFF</color>
-    <color name="secondaryColor">#FF80AB</color>
-    <color name="secondaryDarkColor">#FF4081</color>
+    <color name="secondaryColor">#ff797d</color>
+    <color name="secondaryDarkColor">#ff797d</color>
     <color name="onSecondaryColor">#FFFFFF</color>
     <color name="surfaceColor">#FFFFFF</color>
     <color name="onSurfaceColor">#000000</color>
-    <color name="backgroundColor">#FFC0CB</color>
+    <color name="backgroundColor">#000000</color>
     <color name="onBackgroundColor">#000000</color>
 </resources>

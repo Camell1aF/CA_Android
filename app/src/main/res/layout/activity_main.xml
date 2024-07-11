@@ -3,9 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
+
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:id="@+id/floating_window"
@@ -21,7 +27,7 @@
             android:id="@+id/logo"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/logo"
+            android:src="@drawable/uilogo"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp" />
 
@@ -69,6 +75,8 @@
             android:background="@drawable/custom_button"
             android:textColor="@android:color/black"
             android:textSize="14sp"
-            android:padding="0dp"/>
+            android:padding="0dp"
+            android:gravity="center"
+            android:layout_gravity="center"/>
     </LinearLayout>
 </RelativeLayout>
