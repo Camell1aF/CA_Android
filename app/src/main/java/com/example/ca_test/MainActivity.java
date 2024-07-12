@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.InputFilter;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -154,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
 
         handler = new Handler();
 
-        buttonRegister.setOnClickListener(v -> {
-            registerUser();
-        });
+        // 设置最大输入长度为11
+        InputFilter[] inputFilters = new InputFilter[1];
+        inputFilters[0] = new InputFilter.LengthFilter(11);
+        editTextPhone.setFilters(inputFilters);
 
-        // 添加OnFocusChangeListener来验证手机号
         editTextPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -171,6 +172,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+        });
+
+        buttonRegister.setOnClickListener(v -> {
+            registerUser();
         });
     }
 

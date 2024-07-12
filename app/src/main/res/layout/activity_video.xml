@@ -2,15 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:gravity="center"
+    tools:context=".VideoActivity">
 
-    <!-- 关闭按钮 -->
-
-    <VideoView
+    <com.example.ca_test.domain.CustomVideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"/>
 
     <ImageButton
         android:id="@+id/closeButton"
@@ -23,7 +24,6 @@
         android:contentDescription="@string/close_button_description"
         android:src="@drawable/ic_close" />
 
-    <!-- 倒计时文本 -->
     <TextView
         android:id="@+id/countdownTextView"
         android:layout_width="wrap_content"
