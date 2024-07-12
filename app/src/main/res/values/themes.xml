@@ -12,13 +12,12 @@
         <item name="colorOnSurface">@color/onSurfaceColor</item>
         <item name="android:colorBackground">@color/backgroundColor</item>
         <item name="colorOnBackground">@color/onBackgroundColor</item>
-
-
+        <item name="android:buttonStyle">@style/CustomButtonStyle</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="Theme.CA_test" parent="Base.Theme.CA_test">
-        <item name="android:windowFullscreen">true</item>
-    </style>
+    <style name="Theme.CA_test" parent="Base.Theme.CA_test"/>
 
     <!-- Custom Button Style -->
     <style name="CustomButtonStyle" parent="Widget.MaterialComponents.Button">
