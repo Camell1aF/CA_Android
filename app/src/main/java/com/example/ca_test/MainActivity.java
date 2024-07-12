@@ -179,6 +179,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 在 onResume 中重新获取地理位置
+        if (checkPermissions()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                getLocationFromIP();
+            } else {
+                getLocation();
+            }
+        }
+    }
+
     private void showCustomDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("使用前必读");
