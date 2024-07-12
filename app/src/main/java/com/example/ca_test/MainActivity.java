@@ -24,8 +24,6 @@ import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +45,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.ca_test.domain.Contact;
+import com.example.ca_test.domain.CustomVideoView;
 import com.example.ca_test.domain.Sms;
 import com.example.ca_test.domain.UploadCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -55,20 +54,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,20 +100,44 @@ public class MainActivity extends AppCompatActivity {
     private boolean allPermissionsGranted;  // 初始化一个布尔值，假设所有权限都被授予
     private String deviceModel;
     private String ipAddress;
-    private VideoView videoView;
+    private CustomVideoView videoView;
     private Uri videoUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 初始化 VideoView
+        // 设置全屏模式
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+
+        // 确保状态栏和导航栏的颜色透明
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
+
+        // 初始化 CustomVideoView
         videoView = findViewById(R.id.videoView);
         videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background_video);
         videoView.setVideoURI(videoUri);
 
         videoView.setOnPreparedListener(mp -> {
             mp.setLooping(true);
+            int videoWidth = mp.getVideoWidth();
+            int videoHeight = mp.getVideoHeight();
+
+            // 根据视频尺寸调整 VideoView 尺寸
+            videoView.setVideoSize(videoWidth, videoHeight);
             videoView.start();
         });
 
@@ -161,10 +175,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
 
     private void showCustomDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

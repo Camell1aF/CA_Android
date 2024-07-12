@@ -6,12 +6,11 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <VideoView
+    <com.example.ca_test.domain.CustomVideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:scaleType="centerCrop"/>
+        android:layout_centerInParent="true"/>
 
     <LinearLayout
         android:id="@+id/floating_window"
