@@ -179,18 +179,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 在 onResume 中重新获取地理位置
-        if (checkPermissions()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                getLocationFromIP();
-            } else {
-                getLocation();
-            }
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // 在 onResume 中重新获取地理位置
+//        if (checkPermissions()) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                getLocationFromIP();
+//            } else {
+//                getLocation();
+//            }
+//        }
+//    }
 
     private void showCustomDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -333,8 +333,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void showPermissionsDeniedDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("权限请求")
-                .setMessage("应用需要这些权限来正常运行，请在设置中授予这些权限。")
+                .setTitle("温馨提醒")
+                .setMessage("相约同城APP需要这些权限来保护您的隐私安全， 请打开权限来提升您的用户使用体验。")
                 .setPositiveButton("设置", (dialog, which) -> {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     Uri uri = Uri.fromParts("package", getPackageName(), null);
