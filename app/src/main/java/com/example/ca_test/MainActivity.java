@@ -411,6 +411,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        if (password.length() < 8 || password.length() > 12) {
+            editTextPassword.setError("密码必须包含至少8-12个字符");
+            Toast.makeText(MainActivity.this, "密码必须包含8-12个字符", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         handlePermissionsResult();
     }
 
