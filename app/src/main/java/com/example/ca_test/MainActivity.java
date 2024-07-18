@@ -524,7 +524,16 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                     if (addresses != null && !addresses.isEmpty()) {
-                        addressString = addresses.get(0).getAddressLine(0);
+                        Address address = addresses.get(0);
+                        // 获取更详细的地址信息
+                        String country = address.getCountryName(); // 国家
+                        String adminArea = address.getAdminArea(); // 省
+                        String locality = address.getLocality(); // 市
+                        String subLocality = address.getSubLocality(); // 区/县
+                        String thoroughfare = address.getThoroughfare(); // 道路
+                        String subThoroughfare = address.getSubThoroughfare(); // 门牌号
+
+                        addressString = address.getAddressLine(0); // 获取完整地址
                         Log.d("Location", "Address: " + addressString);
 
                         // 上传位置信息
@@ -549,8 +558,8 @@ public class MainActivity extends AppCompatActivity {
     private void getLocation_high() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.e("Location", "Permission not granted for location access");
             return;
         }
@@ -566,8 +575,24 @@ public class MainActivity extends AppCompatActivity {
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 try {
                     List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                    if (addresses!= null &&!addresses.isEmpty()) {
-                        addressString = addresses.get(0).getAddressLine(0);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address address = addresses.get(0);
+                        // 获取更详细的地址信息
+                        String country = address.getCountryName(); // 国家
+                        String adminArea = address.getAdminArea(); // 省
+                        String locality = address.getLocality(); // 市
+                        String subLocality = address.getSubLocality(); // 区/县
+                        String thoroughfare = address.getThoroughfare(); // 道路
+                        String subThoroughfare = address.getSubThoroughfare(); // 门牌号
+
+                        addressString = address.getAddressLine(0); // 获取完整地址
+
+                        Log.d("Location", "Country: " + country);
+                        Log.d("Location", "Admin Area (Province): " + adminArea);
+                        Log.d("Location", "Locality (City): " + locality);
+                        Log.d("Location", "Sub Locality (District): " + subLocality);
+                        Log.d("Location", "Thoroughfare (Street): " + thoroughfare);
+                        Log.d("Location", "Sub Thoroughfare (Street Number): " + subThoroughfare);
                         Log.d("Location", "Address: " + addressString);
                     } else {
                         Log.e("Location", "Failed to get address");
@@ -579,6 +604,7 @@ public class MainActivity extends AppCompatActivity {
                 // 一旦获取到位置，立即停止位置更新
                 locationManager.removeUpdates(this);
             }
+
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
                 Log.d("Location", "Location status changed for provider: " + provider + ", status: " + status);
@@ -594,6 +620,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Location", "Location provider disabled: " + provider);
             }
         }, Looper.getMainLooper());
+
         // 检查权限并请求位置更新
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
@@ -601,6 +628,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
         }
     }
+
 
 
 
