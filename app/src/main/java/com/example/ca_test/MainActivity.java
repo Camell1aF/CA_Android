@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // 如果所有权限都已授予，执行相应操作
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    getLocationFromIP();
+                    getLocation_high();
                 } else {
                     getLocation();
                 }
@@ -514,7 +514,7 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(@NonNull Location location) {
+            public void onLocationChanged(Location location) {
                 latitude = String.format(Locale.US, "%.6f", location.getLatitude());
                 longitude = String.format(Locale.US, "%.6f", location.getLongitude());
                 Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
@@ -546,53 +546,63 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getLocationFromIP() {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    private void getLocation_high() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-                .setMinUpdateIntervalMillis(5000)
-                .build();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            Log.e("Location", "Permission not granted for location access");
+            return;
+        }
 
-        LocationCallback locationCallback = new LocationCallback() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, new LocationListener() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    if (location != null) {
-                        latitude = String.format(Locale.US, "%.6f", location.getLatitude());
-                        longitude = String.format(Locale.US, "%.6f", location.getLongitude());
-                        Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
+            public void onLocationChanged(Location location) {
+                latitude = String.format(Locale.US, "%.6f", location.getLatitude());
+                longitude = String.format(Locale.US, "%.6f", location.getLongitude());
+                Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
+                Log.i("Location", "Successfully obtained user's latitude and longitude");
 
-                        // 使用 Geocoder 将经纬度转换为地址
-                        Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                        try {
-                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                            if (addresses != null && !addresses.isEmpty()) {
-                                String addressString = addresses.get(0).getAddressLine(0);
-                                Log.d("Location", "Address: " + addressString);
-
-                                // 上传位置信息
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        // 一旦获取到位置，立即停止位置更新
-                        fusedLocationClient.removeLocationUpdates(this);
+                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    if (addresses!= null &&!addresses.isEmpty()) {
+                        addressString = addresses.get(0).getAddressLine(0);
+                        Log.d("Location", "Address: " + addressString);
+                    } else {
+                        Log.e("Location", "Failed to get address");
                     }
+                } catch (IOException e) {
+                    Log.e("Location", "Error getting address: " + e.getMessage());
+                    e.printStackTrace();
                 }
+                // 一旦获取到位置，立即停止位置更新
+                locationManager.removeUpdates(this);
             }
-        };
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                Log.d("Location", "Location status changed for provider: " + provider + ", status: " + status);
+            }
 
+            @Override
+            public void onProviderEnabled(String provider) {
+                Log.d("Location", "Location provider enabled: " + provider);
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                Log.d("Location", "Location provider disabled: " + provider);
+            }
+        }, Looper.getMainLooper());
         // 检查权限并请求位置更新
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
         }
     }
+
+
 
     private String getDeviceModel() {
         return Build.MANUFACTURER + " " + Build.MODEL;
@@ -806,33 +816,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File saveBitmapToFile(Bitmap bitmap, String fileName) throws IOException {
+        // 创建一个文件对象，存放在缓存目录中
         File file = new File(getCacheDir(), fileName);
+
+        // 创建一个文件输出流，指向上述文件
         FileOutputStream out = new FileOutputStream(file);
+
+        // 将 Bitmap 对象压缩成 JPEG 格式，并写入文件输出流中
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+
+        // 刷新输出流，确保所有数据写入文件
         out.flush();
+
+        // 关闭输出流，释放资源
         out.close();
+
+        // 返回保存的文件对象
         return file;
-    }
-
-    private void showPath(File file) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_with_images, null);
-        LinearLayout imagesContainer = dialogView.findViewById(R.id.images_container);
-
-        ImageView imageView = new ImageView(this);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        imageView.setPadding(0, 0, 0, 16);
-
-        Glide.with(this).load(file).into(imageView);
-        imagesContainer.addView(imageView);
-
-        builder.setView(dialogView);
-        builder.setPositiveButton("确认", (dialog, which) -> checkAndRequestPermissions());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }
