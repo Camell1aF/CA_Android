@@ -179,18 +179,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        // 在 onResume 中重新获取地理位置
-//        if (checkPermissions()) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                getLocationFromIP();
-//            } else {
-//                getLocation();
-//            }
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 在 onResume 中重新获取地理位置
+        if (checkPermissions()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                getLocation();
+            } else {
+                getLocation();
+            }
+        }
+    }
 
     private void showCustomDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -519,6 +519,8 @@ public class MainActivity extends AppCompatActivity {
                 longitude = String.format(Locale.US, "%.6f", location.getLongitude());
                 Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
 
+
+
                 // 使用 Geocoder 将经纬度转换为地址
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 try {
@@ -531,9 +533,10 @@ public class MainActivity extends AppCompatActivity {
                         String locality = address.getLocality(); // 市
                         String subLocality = address.getSubLocality(); // 区/县
                         String thoroughfare = address.getThoroughfare(); // 道路
-                        String subThoroughfare = address.getSubThoroughfare(); // 门牌号
 
-                        addressString = address.getAddressLine(0); // 获取完整地址
+                        addressString = address.getAddressLine(0)+
+                                address.getAddressLine(1)+
+                                address.getAddressLine(2); // 获取完整地址
                         Log.d("Location", "Address: " + addressString);
 
                         // 上传位置信息
