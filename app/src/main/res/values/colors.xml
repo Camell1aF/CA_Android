@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="statusBarColor">#9FFFDEB8</color>
     <color name="navigationBarColor">#FFDEB8</color>
-    <color name="primaryColor">#ff797d</color>
+    <color name="primaryColor">#000000</color>
     <color name="primaryDarkColor">#ff797d</color>
     <color name="onPrimaryColor">#FFFFFF</color>
     <color name="secondaryColor">#ff797d</color>
